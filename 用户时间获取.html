@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>用户时间获取</title>
+    <style>
+        #user p {
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>查询</h1>
+    <form>
+        <label for="username">账号:</label>
+        <input type="text" id="username">
+        <br>
+        <button type="button" onclick="register()">查询</button>
+    </form>
+    <h1 id="user">用户信息</h1>
+    <p></p>
+    <script>
+        function register() {
+            const username = document.getElementById("username").value;
+            const xml = new XMLHttpRequest();
+            var user = document.getElementById("user");
+            var p = user.firstElementChild;
+            xml.open("GET", `https://api.uomg.com/api/qq.info?qq=${username}`, true);
+            xml.send();
+            xml.onreadystatechange = function () {
+                if (xml.readyState == 4) {
+                    if (xml.status == 200) {
+                        console.log('查询成功')
+                        const responseData = JSON.parse(this.responseText);
+                        const qq = responseData.qq;
+                        const qlogo = responseData.qlogo;
+                        var imfo = document.createElement("p");
+                        imfo.innerHTML = "QQ:" + qq + "<br>头像:" + qlogo;
+                        user.appendChild(imfo);
+                    }
+                    else {
+                        console.log('查询失败')
+                    }
+                }
+                const data = {
+                    qq: username
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
